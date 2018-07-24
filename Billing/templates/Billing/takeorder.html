@@ -1,0 +1,250 @@
+{% extends "Billing/base.html" %}
+{% block content %}
+<style>
+    ul {
+        list-style-type: none;
+    }
+</style>
+<div class="container">
+    <br>
+    <br>
+    <!--<form action="{% url 'takeorder' %}" method="post">
+        {% csrf_token %}
+        <h1 class="text-success">
+            <strong> Order </strong>
+        </h1>
+        <table class="table table-borderless">
+            <thead>
+                <tr>
+                    <th>Type of Thali</th>
+                    <th>Quantity</th>
+                    <th><button type="submit" class="btn btn-success">Place Order</button></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>&#8377; 60</td>
+                    <td>
+                        <input class="thali-num" type="number" value="0" name="60-thali">
+                    </td>
+                </tr>
+                <tr>
+                    <td>&#8377; 75</td>
+                    <td>
+                        <input class="thali-num" type="number" value="0" name="75-thali">
+                    </td>
+                </tr>
+                <tr>
+                    <td>&#8377; 100</td>
+                    <td>
+                        <input class="thali-num" type="number" value="0" name="100-thali">
+                    </td>
+                </tr>
+                <tr>
+                    <td>&#8377; 125</td>
+                    <td>
+                        <input class="thali-num" type="number" value="0" name="125-thali">
+                    </td>
+                </tr>
+                <tr>
+                    <td>&#8377; 150</td>
+                    <td>
+                        <input class="thali-num" type="number" value="0" name="150-thali">
+                    </td>
+                </tr>
+                <tr>
+                    <td>&#8377; 200</td>
+                    <td>
+                        <input class="thali-num" type="number" value="0" name="200-thali">
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>Remarks</strong></td>
+                    <td><input type="text" name="remarks"></td>
+                </tr>
+                <tr>
+                    <td>
+                        <strong>Name</strong>
+                    </td>
+                    <td>
+                        <input type="text" name="name" id="name" required>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Phone Number</td>
+                    <td>
+                        <input type="text" name="number">
+                    </td>
+                    <td id="existing_balance">
+                    </td>
+                </tr>
+                <tr>
+                    <td>Address</td>
+                    <td>
+                        <input id="address" type="text" name="address">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Delivery Boy
+                    </td>
+                    <td>
+                        <input type="text" name="delivery-boy">
+                    </td>
+                </tr>
+                <tr>
+                    
+                    <td>
+                        Total Bill
+                    </td>
+                    <td>
+                        <input id="total" type="text" value="0" name="amount">
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>-->
+    <!--<div id="total"></div>-->
+    <form action="{% url 'takeorder' %}" method="post">
+        {% csrf_token %}
+        <h1 class="text-success">
+            <strong> Order </strong>
+        </h1>
+        <input type="number" name="item_no" id="item_no">
+        <input type="submit" value="Add Item" id="item_add" class="btn btn-success">
+        <table class="table table-borderless" id="order_table">
+            <thead>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <strong>Remarks</strong>
+                    </td>
+                    <td>
+                        <input type="text" name="remarks">
+                    </td>
+                    <td>
+                        <input type="submit" value="Take Order" class="btn btn-success">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <strong>Name</strong>
+                    </td>
+                    <td>
+                        <input type="text" name="name" id="name" required>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Phone Number</td>
+                    <td>
+                        <input type="text" name="number" required>
+                    </td>
+                    <td id="existing_balance">
+                    </td>
+                </tr>
+                <tr>
+                    <td>Address</td>
+                    <td>
+                        <input id="address" type="text" name="address">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Delivery Boy
+                    </td>
+                    <td>
+                        <input type="text" name="delivery-boy">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Total Bill
+                    </td>
+                    <td>
+                        <input id="total" type="number" value="0" name="amount">
+                    </td>
+                </tr>    
+            </tbody>
+        </table>
+    </form>
+</div>
+<script>
+    $("input[name='number']").keyup(function () {
+        //console.log('HAHA');
+        $.ajax({
+            url : 'ajax/phonesearch',
+            data : {
+                'phone_number' : $("input[name='number']").val()
+            },
+            dataType : 'json',
+            success : function(data) {
+                console.log('HAHA');
+                //console.log(data);
+                console.log(data);
+                if (data.address != undefined && data.name != undefined) {
+                    console.log('HAHA');
+                    console.log(data);
+                    document.getElementById('existing_balance').innerHTML = data.balance;
+                    document.getElementById('address').value = data.address;
+                    document.getElementById('name').value = data.name;
+                }
+            }
+        });
+    });
+
+    function get_tot(){
+        z = $('.quantities');
+        var total = 0;
+        for (let i = 0; i < z.length; i += 1){
+            name = 'rate' + z[i].name.replace('quantity', '');
+            total += document.getElementById(name).value * z[i].value;
+        }
+        console.log(total);
+        $("#total").val(total);
+    }
+
+    $('#item_add').click(function(event) {
+        event.preventDefault();
+        $.ajax({
+            url : 'ajax/item_add',
+            data : {
+                'item_no' : $('#item_no').val()
+            },
+            dataType : 'json',
+            success : function(data) {
+                console.log(data);
+                $('#order_table tbody').append('<tr>' + 
+                    '<td>' + 
+                        data.name + 
+                    '</td>' + 
+                    '<td>' + 
+                        '<input type="number" id="rate' + $('#item_no').val() + '" value=' + data.rate + '>' + 
+                    '</td>' +
+                    '<td>' +
+                        '<input type="number" class="quantities" value="0" name=quantity' + $('#item_no').val() + '>' +  
+                    '</td>' + 
+                    '</tr>');
+                var all = document.getElementsByClassName('quantities');
+                console.clear();
+                console.log(all)
+                for (var i = 0; i < all.length; i = i + 1) {
+                    console.log(all[i]);
+                    all[i].addEventListener('click', get_tot);
+                    all[i].addEventListener('keyup', get_tot);
+                    //function() {
+                    //    console.log(this);
+                    //    orig_val = this.value;
+                    //    name = 'rate' + this.name.replace('quantity', '');
+                    //    //document.getElementById('total').value += parseInt(('input[name="' + name + '"]').val());
+                    //    document.getElementById('total').value = parseInt(document.getElementById('total').value) + parseInt(document.getElementById(name).value);
+                    //});
+                }
+                
+            }
+        });
+    });
+    
+    
+</script> 
+{% endblock content %}

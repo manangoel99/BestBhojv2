@@ -1,0 +1,80 @@
+{% extends "Billing/base.html" %}
+{% block content %}
+    <div class="container">
+
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>
+                        Phone Number
+                    </th>
+                    <th>
+                        Balance
+                    </th>
+                    <th>
+                        <input id="number_search" type="text" placeholder="Enter Mobile Number">
+                    </th>
+                </tr>
+            </thead>
+            <tbody id="data">
+                {% for number, balance in customer_dict.items %}
+                {% if number != '' %}
+                  
+                
+                    <tr id="{{ number }}" class="clickable-row" data-href="{% url 'custompage' number %}">
+                        <td class="phone_number">{{ number }}</td>
+                        <td>
+                            {{ balance }}
+                        </td>
+                    </tr>
+                {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <script>
+        $('#number_search').keyup(function() {
+            var numbers = $('.phone_number');
+            var num = []
+            for (var i = 0; i < numbers.length; i += 1) {
+                num.push(numbers[i].innerHTML.replace('\n', ''));
+            }
+            z = [];
+            for (var i = 0; i < num.length; i += 1) {
+                k = $('#number_search').val();
+                if (num[i].includes(k) == true) {
+                    z.push(num[i]);
+                }
+            }
+            var c = document.getElementById('data').childNodes;
+            var m = []
+            for (var i = 0; i < c.length; i += 1) {
+                    if (c[i].id != undefined) {
+                        document.getElementById(c[i].id).style.display = "";
+                        m.push(c[i].id);
+                    }
+            }
+            b = [];
+            for (var i = 0; i < m.length; i += 1) {
+                if (z.includes(m[i]) == false) {
+                    b.push(m[i]);
+                }
+            }
+            
+            for (var i = 0; i < b.length; i += 1) {
+                document.getElementById(b[i]).style.display = "none";
+            }
+        });
+        $(document).ready(function($) {
+            $('.clickable-row').click(function() {
+                window.location = $(this).data('href');
+            });
+        });
+    </script>
+
+{% endblock content %}

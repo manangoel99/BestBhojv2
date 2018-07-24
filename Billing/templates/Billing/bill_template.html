@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Bill {{ order.pk }}</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Amatic+SC" rel="stylesheet">
+    <style>
+        @media print {
+            html, body {
+                display: block;
+                font-family: Calibri;
+                margin: 0;
+            }
+        }
+        @page {
+            size : 12.7cm, 10.5cm;
+        }
+    /*    hr {
+        display: block;
+        height: 1px;
+        border: 0;
+        border-top: 1px solid #ccc;
+        margin: 1em 0;
+        padding: 0;
+    }*/
+    hr {
+       display: block;
+       position: relative;
+       padding: 0;
+       margin: 8px auto;
+       height: 0;
+       width: 15cm;
+       max-height: 0;
+       font-size: 1px;
+       line-height: 0;
+       clear: both;
+       border: none;
+       border-top: 1px solid black;
+       border-bottom: 1px solid black;
+    }
+    tr {
+        padding:0;
+    }
+    .table td {
+        padding:0;
+    }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center" style="font-size:120px;"><strong>VS Foods</strong></h1>
+        <h3 class="text-center" style="font-size:50px;">
+            First Floor, S.C.O - 6, Sector - 8
+            <br>
+            Karnal, Haryana - 132001
+        </h3>
+        <h4 class="text-center" style="font-size:70px;">
+            9996823401
+        </h4>
+        <h4 class="text-center" style="font-size:50px;">
+            Delivery Boy : {{ order.delivery_boy }}
+        </h4>
+        <h4 class="text-center" style="font-size:80px;">
+            Address :   {{ order.address }}
+        </h4>
+        <h4 class="text-center" style="font-size:80px;">
+            Phone Number : {{ order.phone_number }}
+        </h4>
+        <div class="row" style="font-size:60px;">
+            <div class="offset-md-4 offset-lg-4"></div>
+                <div class="col-md-4">
+                    <table class="table table-borderless">
+                        <thead>
+                            <th>Item</th>
+                            <th>Rate</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                        </thead>
+                        <tbody>
+                            {% for ord in act_order  %}
+                              <tr>
+                                {% for x in ord %}
+                                  <td>{{ x }}</td>
+
+                                {% endfor %}
+                                <tr><td><hr></td></tr>
+                              </tr>
+                            {% endfor %}
+                            <tr>
+                                <td><hr></td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="3">Amount</td>
+                                <td>{{ order.amount }}</td>
+                            </tr>
+                            <tr>
+                                <td><hr></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">Previous Dues</td>
+                                <td>{{ prev_dues }}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">Due Amount</td>
+                                <td>{{ customer.balance }}</td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+            </div>
+        </div>
+    </div>
+    <script>
+        window.onload = function () {
+            if (!window.location.hash) {
+                window.location = window.location + '#loaded';
+                window.setTimeout(window.location.reload(), 2000);
+            }
+            if (window.location.hash) {
+                window.print();
+            }
+        }
+    </script>
+</body>
+</html>

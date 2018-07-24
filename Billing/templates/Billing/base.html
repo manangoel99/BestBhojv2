@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Hi {{ request.user.username }}</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <script src="{% static 'menu.json' %}" type="text/javascript"></script>
+    <style>
+        .sidebar {
+          position: fixed;
+          top: 0;
+          bottom: 0;
+          left: 0;
+          display: block;
+          overflow-x: hidden;
+          overflow-y: auto
+        }
+    </style>
+</head>
+
+<body>
+    <div class="row">
+        <div class="sidebar col-md-4 col-lg-4">
+            <table class="table table-responsive">
+                <thead>
+                    <tr>
+                        <th>Phone Number</th>
+                        <th>Address</th>
+                        <th>Delivery Boy</th>
+                        <th>Order Details</th>
+                        <th>Print Bill</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in undelivered %}
+                        <tr>
+                            <td>{{ order.name }}</td>>
+                            <td>{{ order.phone_number }}</td>
+                            <td>{{ order.address }}</td>
+                            <td>{{ order.delivery_boy }}</td>
+                            <td>
+                                <button type="button" data-toggle="modal" data-target="#ordermodal{{ order.pk }}" class="btn btn-success">
+                                    Order Details
+                                </button>
+                            </td>
+                            <td>
+                                <a href="/bill/{{ order.pk }}" class="btn btn-success" target="_blank">Print Bill</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% for order in undelivered %}
+            <div class="modal fade" id="ordermodal{{ order.pk }}">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Order for {{ order.name }}</h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+            
+                        <!-- Modal body -->
+                        <div class="modal-body">
+                            Address : {{ order.address }} <br>
+                            Phone Number : {{ order.phone_number }} <br>
+                            Remarks : {{ order.remarks }} <br>
+                            Order : 
+                            {% for key, value in actual_orders.items %} 
+                                {% if key == order.pk %} 
+                                    {% for x in value %} 
+                                        {{ x }}<br>
+                                    {% endfor %} 
+                                {% endif %} 
+                            {% endfor %}
+                            Total : {{ order.amount }}
+                            <form action="" method="post">
+                                {% csrf_token %}
+                                <input type="text" name="delivery_boy"  placeholder="Enter Delivery Boy">
+                                <input type="submit" value="Delivery Sent" id="ajaj" class="btn btn-success" name="status_change">
+                                <input type="number" id="order_id" name="order_id" value="{{ order.pk }}" style="display:none;">
+                                <!--<a href="/bill/{{ order.pk }}" class="btn btn-success" target="_blank">Print Bill</a>-->
+                            </form>
+                        </div>
+            
+                        <!-- Modal footer -->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+            
+                </div>
+            </div>
+        {% endfor %}
+        
+        <div class="offset-md-4 offset-lg-4 col-md-8 col-lg-8 col-sm-8 col-xs-8">
+            <div class="container">
+                <a href="{% url 'logout' %}" class="btn btn-success">Log Out</a>
+                <a href="{% url 'takeorder' %}" class="btn btn-success">Take Order</a>
+                <a href="{% url 'all_orders' %}" class="btn btn-success">All Orders</a>
+                <a href="{% url 'all_customers' %}" class="btn btn-success">All Customers</a>
+                <a href="{% url 'dayrec' %}" class="btn btn-success">Record Of Day</a>
+            </div>
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+    <script>
+        $('#ajaj').click(function (event) {
+            //event.preventDefault();
+            x = $('#order_id').val();
+            window.open('/bill/' + x, '_blank');
+        });
+    </script>
+</body>
+</html>

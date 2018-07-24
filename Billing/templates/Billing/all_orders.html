@@ -1,0 +1,93 @@
+{% extends "Billing/base.html" %}
+{% block content %}
+    <div class="container">
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Order Number</th>
+                    <th>Name</th>
+                    <th>Phone Number</th>
+                    <th>Address</th>
+                    <th>Order</th>
+                    <th>Remarks</th>
+                    <th>Operator</th>
+                    <th>Payment Status</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                    <th>Delivery Status</th>
+                    <th>Delivery Boy</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in all_orders %}
+                <tr class="clickable-row" data-href="{% url 'specific_order' order.pk %}">
+                    {% if order.payment_status == False %}
+                        <td>{{ order.id }}</td>
+                        <td>{{ order.name }}</td>
+                        <td>{{ order.phone_number }}</td>
+                        <td>{{ order.address }}</td>
+                        <td style="font-size:0.65vw; width:150px;">
+                            {% for key, value in actual_orders.items %}
+                                {% if key == order.pk %}
+                                    {% for x in value  %}
+                                        {{ x }}
+                                        <br>
+                                    {% endfor %}
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+                        <td>{{ order.remarks }}</td>
+                        <td>{{ order.operator }}</td>
+                        {% if order.payment_status == False %}
+                            <td>Pending</td>
+                        {% else %}
+                            <td>Paid</td>
+                        {% endif %}
+                        <td>&#8377;{{ order.amount }}</td>
+                        <td>{{ order.date }}</td>
+                        <td>{{ order.delivery_status }}</td>
+                        <td>{{ order.delivery_boy }}</td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+                {% for order in all_orders %}
+                    <tr class="clickable-row" data-href="{% url 'specific_order' order.pk %}">
+                        {% if order.payment_status == True %}
+                            <td>{{ order.id }}</td>
+                            <td>{{ order.name }}</td>
+                            <td>{{ order.phone_number }}</td>
+                            <td>{{ order.address }}</td>
+                            <td style="font-size:0.65vw;">
+                                 {% for key, value in actual_orders.items %} {% if key == order.pk %} {% for x in value %} {{ x }}
+                                <br> {% endfor %} {% endif %} {% endfor %}
+                            </td>
+                            <td>{{ order.remarks }}</td>
+                            <td>{{ order.operator }}</td>
+                            {% if order.payment_status == True %}
+                                <td>Paid</td>
+                            {% else %}
+                                <td>Pending</td>
+                            {% endif %}
+                            <td>&#8377;{{ order.amount }}</td>
+                            <td>{{ order.date }}</td>
+                            <td>{{ order.delivery_status }}</td>
+                            <td>{{ order.delivery_boy }}</td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <script>
+        $(document).ready(function($) {
+            $('.clickable-row').click(function() {
+                window.location = $(this).data('href');
+            });
+        });
+    </script>
+{% endblock content %}

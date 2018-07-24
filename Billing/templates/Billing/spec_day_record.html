@@ -1,0 +1,59 @@
+{% extends "Billing/base.html" %}
+{% block content %}
+    <div class="container">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Order Number</th>
+                    <th>Name</th>
+                    <th>Phone Number</th>
+                    <th>Address</th>
+                    <th>Order</th>
+                    <th>Remarks</th>
+                    <th>Operator</th>
+                    <th>Payment Status</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                    <th>Money Received</th>
+                    <th>Delivery Boy</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr class="clickable-row" data-href="{% url 'specific_order' order.id %}">
+                    <td>{{ order.id }}</td>
+                    <td>{{ order.name }}</td>
+                    <td>{{ order.phone_number }}</td>
+                    <td>{{ order.address }}</td>
+                    <td style="font-size:0.65vw;">
+                         {% for key, value in actual_orders.items %} {% if key == order.pk %} {% for x in value %} {{ x }}
+                        <br> {% endfor %} {% endif %} {% endfor %}
+                    </td>
+                    <td>{{ order.remarks }}</td>
+                    <td>{{ order.operator }}</td>
+                    {% if order.payment_status == False %}
+                    <td>Pending</td>
+                    {% else %}
+                    <td>Paid</td>
+                    {% endif %}
+                    <td>&#8377;{{ order.amount }}</td>
+                    <td>{{ order.date }}</td>
+                    <td>{{ order.money_received }}</td>
+                    <td>{{ order.delivery_boy }}</td>
+                </tr>
+                {% endfor %}
+                <tr>
+                    <td colspan="11">Total Money</td>
+                    <td>{{ money_received }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <script>
+        $(document).ready(function ($) {
+            $('.clickable-row').click(function () {
+                window.location = $(this).data('href');
+            });
+        });
+    </script>
+{% endblock content %}
