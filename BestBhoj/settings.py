@@ -30,7 +30,9 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
     '192.168.43.63',
     '192.168.0.105',
-    'manangoel.pythonanywhere.com'
+    'manangoel.pythonanywhere.com',
+    '192.168.43.189',
+    '192.168.1.21'
 ]
 
 

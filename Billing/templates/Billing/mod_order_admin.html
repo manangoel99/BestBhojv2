@@ -25,7 +25,7 @@
               <button type="submit" class="btn btn-success">Edit Order</button>
             </th>
             <th>
-              <a href="/bill/{{ order.pk }}" class="btn btn-success" target="_blank">Print Bill</a>
+              <a href="#" onclick="window.open('/billing/bill/{{ order.pk }}'); return false;">Print Bill</a>
             </th>
           </tr>
         </thead>
