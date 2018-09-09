@@ -54,7 +54,7 @@ def status_change(request):
     order.save()
 
 def get_undelivered():
-    return orders.objects.filter(delivery_status=False)
+    return orders.objects.filter(delivery_status=False).order_by('-date')
 
 def ajax_item_add(request):
     try:
@@ -102,7 +102,7 @@ def order_display(request):
         if request.method == 'POST' and 'status_change' in request.POST:
             print(request.POST)
             status_change(request)
-        all_orders = orders.objects.all()
+        all_orders = orders.objects.all().order_by('-date')
         context = {
             'all_orders': all_orders,
             'user' : request.user,
@@ -340,6 +340,21 @@ def genbill(request, order_num):
         'act_order' : z,
         'customer' : customer,
         'prev_dues' : int(customer.balance) - int(order.amount)
+    })
+
+@login_required(login_url='/billing')
+def today_order(request):
+    today = datetime.date.today()
+    q = orders.objects.filter(date=today)
+    #print(q)
+    #for j in q:
+    #    print(j)
+    #//return HttpResponse('<h1>Hola</h1>')
+    return render(request, 'Billing/Order_today.html', context={
+        'user': request.user,
+        'undelivered': get_undelivered(),
+        'actual_orders': orders_all(),
+        'all_orders' : q
     })
 
 def log_out(request):

@@ -26,7 +26,7 @@
             <tbody>
                 {% for order in all_orders %}
                 <tr class="clickable-row" data-href="{% url 'specific_order' order.pk %}">
-                    {% if order.payment_status == False %}
+                    {# if order.payment_status == False #}
                         <td>{{ order.id }}</td>
                         <td>{{ order.name }}</td>
                         <td>{{ order.phone_number }}</td>
@@ -52,33 +52,8 @@
                         <td>{{ order.date }}</td>
                         <td>{{ order.delivery_status }}</td>
                         <td>{{ order.delivery_boy }}</td>
-                    {% endif %}
+                    {# endif #}
                 </tr>
-                {% endfor %}
-                {% for order in all_orders %}
-                    <tr class="clickable-row" data-href="{% url 'specific_order' order.pk %}">
-                        {% if order.payment_status == True %}
-                            <td>{{ order.id }}</td>
-                            <td>{{ order.name }}</td>
-                            <td>{{ order.phone_number }}</td>
-                            <td>{{ order.address }}</td>
-                            <td style="font-size:0.65vw;">
-                                 {% for key, value in actual_orders.items %} {% if key == order.pk %} {% for x in value %} {{ x }}
-                                <br> {% endfor %} {% endif %} {% endfor %}
-                            </td>
-                            <td>{{ order.remarks }}</td>
-                            <td>{{ order.operator }}</td>
-                            {% if order.payment_status == True %}
-                                <td>Paid</td>
-                            {% else %}
-                                <td>Pending</td>
-                            {% endif %}
-                            <td>&#8377;{{ order.amount }}</td>
-                            <td>{{ order.date }}</td>
-                            <td>{{ order.delivery_status }}</td>
-                            <td>{{ order.delivery_boy }}</td>
-                        {% endif %}
-                    </tr>
                 {% endfor %}
             </tbody>
         </table>
