@@ -20,7 +20,7 @@ def read_menu():
     for i in range(1, sheet.nrows):
         menu[i] = {
             'name' : sheet.cell_value(i, 1).rstrip(),
-            'rate': round(float(sheet.cell_value(i, 8)))
+            'rate': float(sheet.cell_value(i, 3))
         }
         with open('menu.json', 'w') as fp:
             json.dump(menu, fp)
@@ -73,6 +73,8 @@ def ajax_item_add(request):
 
 def index(request):
     read_menu()
+    if request.user.is_authenticated:
+        return redirect(order_display)
     if request.method == 'POST':
         form = LogInForm(request.POST)
         if form.is_valid():
@@ -102,7 +104,7 @@ def order_display(request):
         if request.method == 'POST' and 'status_change' in request.POST:
             print(request.POST)
             status_change(request)
-        all_orders = orders.objects.all().order_by('-date')
+        all_orders = orders.objects.all().order_by('-id')
         context = {
             'all_orders': all_orders,
             'user' : request.user,
@@ -132,7 +134,9 @@ def take_order(request):
                 order.address = request.POST['address']
                 order.remarks = request.POST['remarks']
                 order.operator = request.user.username
-                order.amount = request.POST['amount']
+                order.sub_amount = (20 / 21) * int(request.POST['amount'])
+#                print(type(order.sub_amount))
+                order.amount = round(1.05 * order.sub_amount)
                 order.delivery_boy = request.POST['delivery-boy']
                 order.balance = int(request.POST['amount'])
                 order.save()
@@ -290,7 +294,8 @@ def dayrec(request):
             'actual_orders': orders_all()
         })
     if request.method == 'POST':
-        reqd = orders.objects.filter(money_receive_date=request.POST['DayDate'])
+        print(request.POST['DayDate'])
+        reqd = orders.objects.filter(date=request.POST['DayDate'])
         tot_money_received = 0
         for order in reqd:
             tot_money_received += order.money_received
@@ -334,7 +339,7 @@ def genbill(request, order_num):
             z.append([menu[int(k[0])]['name'], menu[int(k[0])]['rate'], k[1], int(menu[int(k[0])]['rate']) * int(k[1])])
         except:
             continue
-
+    print(z)
     return render(request, 'Billing/bill_template.html', context={
         'order' : order,
         'act_order' : z,

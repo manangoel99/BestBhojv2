@@ -86,10 +86,10 @@
                             <th>Price</th>
                         </thead>
                         <tbody>
-                            {% for ord in act_order  %}
+                            {% for ord in act_order %}
                               <tr>
                                 {% for x in ord %}
-                                  <td>{{ x }}</td>
+                                  <td>{{ x }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 
                                 {% endfor %}
                                 <tr><td><hr></td></tr>
@@ -97,6 +97,19 @@
                             {% endfor %}
                             <tr>
                                 <td><hr></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">Sub Amount</td>
+                                <td>{{ order.sub_amount }}</td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="3">CGST</td>
+                                <td>2.5 %</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">SGST</td>
+                                <td>2.5 %</td>
                             </tr>
 
                             <tr>

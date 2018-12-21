@@ -10,6 +10,7 @@ class orders(models.Model):
     remarks = models.CharField(max_length=1000, null=True, blank=True)
     operator = models.CharField(max_length=50)
     payment_status = models.BooleanField(default=False)
+    sub_amount = models.IntegerField()
     amount = models.IntegerField()
     delivery_boy = models.CharField(max_length=100, null=True, blank=True)
     money_received = models.IntegerField(default=0)

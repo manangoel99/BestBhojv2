@@ -201,7 +201,7 @@
             total += document.getElementById(name).value * z[i].value;
         }
         console.log(total);
-        $("#total").val(total);
+        $("#total").val(Math.round(total * 1.05));
     }
 
     $('#item_add').click(function(event) {
