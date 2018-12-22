@@ -293,7 +293,7 @@ def dayrec(request):
             'undelivered': get_undelivered(),
             'actual_orders': orders_all()
         })
-    if request.method == 'POST':
+    if request.method == 'POST' and 'DayDate' in request.POST:
         print(request.POST['DayDate'])
         reqd = orders.objects.filter(date=request.POST['DayDate'])
         tot_money_received = 0
@@ -305,6 +305,13 @@ def dayrec(request):
             'undelivered': get_undelivered(),
             'actual_orders': orders_all()
         })
+    elif request.method == 'POST' and 'status_change' in request.POST:
+        status_change(request)
+        return render(request, 'Billing/spec_day_input.html', context={
+            'undelivered': get_undelivered(),
+            'actual_orders': orders_all()
+        })
+
 
 @login_required(login_url='/billing')
 def custompage(request, number):
